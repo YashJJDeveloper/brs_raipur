@@ -365,3 +365,16 @@ setLanguage(language);
 refreshImages();
 // Use this after updating window.BRSImages in a running page.
 window.addEventListener('brs:images-changed', refreshImages);
+
+// A single, subtle entrance per section. Content stays visible without this enhancement.
+if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const entranceObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('motion-enter');
+                entranceObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.hero-copy, .pack-stage, .section-head, .guide > div, .contact > div').forEach(element => entranceObserver.observe(element));
+}
